@@ -4,5 +4,5 @@ matrix:
   - env: BUILDPATH=/home/abstruse/alpine
 script:
   - mkdir build
-  - 'sudo ./install -r 3.9 -a apk-tools-static-2.10.3-r1.apk -d build -m http://mirror1.hs-esslingen.de/pub/Mirrors/alpine/ -i alpine-3.9 -p "Alpine Linux M1" -D "Alpine Linux M1cr0man 3.9.0 64-bit lx-brand image."'
+  - 'sudo ./install -r 3.9 -a apk-tools-static-2.10.3-r1.apk -d $(pwd)/build -m http://mirror1.hs-esslingen.de/pub/Mirrors/alpine/ -i alpine-3.9 -p "Alpine Linux M1" -D "Alpine Linux M1cr0man 3.9.0 64-bit lx-brand image."'
 
