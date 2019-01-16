@@ -1,5 +1,5 @@
 ---
-image: smartos_alpine_builder
+image: basic_builder
 matrix:
   - env: BUILDPATH=/home/abstruse/alpine
 script:
