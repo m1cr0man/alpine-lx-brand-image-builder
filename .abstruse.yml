@@ -2,7 +2,6 @@
 image: basic_builder
 matrix:
   - env: BUILDPATH=/home/abstruse/alpine
-  - env: SMARTOS_BUILDER=10.0.0.100
 script:
   - mkdir build
   - 'sudo ./install -r 3.9 -a apk-tools-static-2.10.3-r1.apk -d $(pwd)/build -m http://mirror1.hs-esslingen.de/pub/Mirrors/alpine/ -i alpine-3.9 -p "Alpine Linux M1" -D "Alpine Linux M1cr0man 3.9.0 64-bit lx-brand image."'
@@ -16,6 +15,7 @@ before_deploy:
   - echo $SSH_KEY_BUILDER | base64 -d > ~/.ssh/id_ed25519
   - mc cp m1s3/artifacts/zones/$(mc cat m1s3/artifacts/zones/alpine-latest.txt) .
 deploy:
+  - export SMARTOS_BUILDER=10.0.0.100
   - rsync -vaH *.tar.gz create-lx-image root@$SMARTOS_BUILDER:./
   - ssh root@$SMARTOS_BUILDER bash -c './create-lx-image -t *.tar.gz -k 4.4.0 -m 20181011T004530Z -i lx-alpine -d "Alpine Linux M1cr0man 3.9.0 64-bit lx-brand image." -u https://docs.joyent.com/images/container-native-linux; rm -f *.tar.gz'
   - rsync -vaH root@$SMARTOS_BUILDER:*.zfs.gz .
