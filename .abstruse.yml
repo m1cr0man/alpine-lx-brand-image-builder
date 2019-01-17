@@ -5,8 +5,7 @@ matrix:
 script:
   - mkdir build
   - 'sudo ./install -r 3.9 -a apk-tools-static-2.10.3-r1.apk -d $(pwd)/build -m http://mirror1.hs-esslingen.de/pub/Mirrors/alpine/ -i alpine-3.9 -p "Alpine Linux M1" -D "Alpine Linux M1cr0man 3.9.0 64-bit lx-brand image."'
-before_deploy:
+after_successful:
   - mc config host add minio http://s3.m1cr0man.com $MINIO_ACCESS_KEY $MINIO_SECRET_KEY --api S3v4
-deploy:
   - mc mb -p joyent_images
   - mc cp *.tar.gz minio/joyent_images
