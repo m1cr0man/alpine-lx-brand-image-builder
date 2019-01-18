@@ -23,6 +23,6 @@ deploy:
   - ssh root@$SMARTOS_BUILDER ./create.sh
   - rsync -vaH root@$SMARTOS_BUILDER:*.zfs.gz .
   - rsync -vaH root@$SMARTOS_BUILDER:*.json .
-  - ssh root@$SMARTOS_BUILDER bash -c 'rm -f *.zfs.gz *.json'
+  - ssh root@$SMARTOS_BUILDER rm -f *.zfs.gz *.json
 after_deploy:
   - mc cp *.zfs.gz *.json m1s3/artifacts/zones/
