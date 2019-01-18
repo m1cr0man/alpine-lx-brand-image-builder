@@ -12,6 +12,7 @@ fi
 set -euo pipefail
 IFS=$'\n\t'
 
+BASE_DATASET=$(zfs list -Ho name | grep -m1 data || echo zones)
 BUILD_DATE=$(date +%Y%m%d)
 TARBALL=
 KERNEL=
@@ -144,12 +145,12 @@ fi
 
 gtaropts="${gtaropts}f"
 
-zpath="/zones/$IUUID"
-zroot="/zones/$IUUID/root"
+zpath="/$BASE_DATASET/$IUUID"
+zroot="/$BASE_DATASET/$IUUID/root"
 
 create_dataset() {
 	echo "==> Creating dataset for image creation..."
-	zfs create zones/$IUUID
+	zfs create $BASE_DATASET/$IUUID
 	chmod 700 $zpath
 
 	mkdir $zpath/root
@@ -158,7 +159,7 @@ create_dataset() {
 	mkdir $zpath/cores
 	chmod 755 $zpath/cores
 
-	echo "==> The dataset is zones/$IUUID"
+	echo "==> The dataset is $BASE_DATASET/$IUUID"
 	echo "==>"
 }
 
@@ -166,7 +167,7 @@ install_tar() {
 	echo "==> Installing the tar archive, this will take a few minutes..."
 	if ! ( cd "$zroot" && gtar --strip-components="$(tar tzf $TARBALL | grep '/root/' | awk -F"/" '{print NF-2}')" "-x$gtaropts" "$TARBALL" ); then
 		echo "==> Error: extraction from tar archive failed."
-		zfs destroy -r zones/$IUUID
+		zfs destroy -r $BASE_DATASET/$IUUID
 	fi
 }
 
@@ -222,14 +223,14 @@ create_file() {
 	echo "==> Creating image file:"
 
 	echo "====> Creating snapshot..."
-	zfs snapshot zones/$IUUID@final
+	zfs snapshot $BASE_DATASET/$IUUID@final
 
 	echo "====> Doing a zfs send. This may take a few minutes..."
-	zfs send zones/$IUUID@final | gzip -9 > ${IMAGE_NAME}-${BUILD_DATE}.zfs.gz
+	zfs send $BASE_DATASET/$IUUID@final | gzip -9 > ${IMAGE_NAME}-${BUILD_DATE}.zfs.gz
 	echo "====> Done."
 
 	echo "====> Cleaning up..."
-	zfs destroy -r zones/$IUUID
+	zfs destroy -r $BASE_DATASET/$IUUID
 
 	echo "==> Image File created!"
 	echo "==>"
