@@ -149,6 +149,10 @@ if [[ -d $INSTALL_DIR ]]; then
 		umount $INSTALL_DIR/sys
 	fi
 
+	if [[ $(mount | grep -c $INSTALL_DIR/dev) -gt 0 ]]; then
+		umount $INSTALL_DIR/dev
+	fi
+
 	rm -rf $INSTALL_DIR
 	mkdir -p $INSTALL_DIR
 fi
@@ -196,6 +200,7 @@ APK
 echo "==> Mounting /proc /sys and /dev in the $INSTALL_DIR"
 mount -t proc none $INSTALL_DIR/proc
 mount -o bind /sys $INSTALL_DIR/sys
+mount -o bind /dev $INSTALL_DIR/dev
 
 echo "==> Setting TZ to UTC"
 chroot $INSTALL_DIR apk add --update tzdata
@@ -288,6 +293,7 @@ echo "====> Running ./install.sh -i $INSTALL_DIR"
 echo "==> Saving installation as $TARGET. This may take a few minutes."
 umount $INSTALL_DIR/proc
 umount $INSTALL_DIR/sys
+umount $INSTALL_DIR/dev
 ESCAPED_INSTALL_DIR="$(echo "$INSTALL_DIR/" | sed -e 's/\//\\\//g')"
 EXCLUDE="$(sed -e s/^/--exclude=$ESCAPED_INSTALL_DIR/g exclude.txt | sed -e 's/exclude=\//exclude=/g' | tr '\n' ' '))"
 tar czf $TARGET $EXCLUDE $INSTALL_DIR/
