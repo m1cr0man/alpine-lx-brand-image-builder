@@ -13,6 +13,7 @@ after_success:
 before_deploy:
   - mkdir -p ~/.ssh
   - echo $SSH_KEY_BUILDER | base64 -d > ~/.ssh/id_ed25519
+  - chmod 400 ~/.ssh/id_ed25519
   - mc cat m1s3/artifacts/zones/alpine-latest.txt
   - mc cp m1s3/artifacts/zones/$(mc cat m1s3/artifacts/zones/alpine-latest.txt) .
 deploy:
