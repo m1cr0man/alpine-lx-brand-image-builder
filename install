@@ -297,7 +297,7 @@ umount $INSTALL_DIR/dev
 ESCAPED_INSTALL_DIR="$(echo "$INSTALL_DIR/" | sed -e 's/\//\\\//g')"
 # Remove excluded files
 echo $INSTALL_DIR
-for exc in cat exclude.txt; do
+for exc in $(cat exclude.txt); do
 	echo "==>Removing $exc"
 	if [ -e $INSTALL_DIR/$exc ]; then
 		rm -rf $INSTALL_DIR/$exc
