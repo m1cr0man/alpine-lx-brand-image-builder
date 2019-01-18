@@ -145,12 +145,23 @@ fi
 
 gtaropts="${gtaropts}f"
 
-zpath="/$BASE_DATASET/$IUUID"
-zroot="/$BASE_DATASET/$IUUID/root"
+zname="$BASE_DATASET/$IUUID"
+zpath="/$zname"
+zroot="/$zname/root"
 
 create_dataset() {
+	if [ -n "$(zfs list | grep $zname)" ]; then
+		echo "==> Removing old dataset..."
+		zfs destroy -R $zname
+	fi
+
+	if [ -e $zpath ]; then
+		echo "==> Removing old dataset contents..."
+		rm -rf $zpath
+	fi
+
 	echo "==> Creating dataset for image creation..."
-	zfs create $BASE_DATASET/$IUUID
+	zfs create $zname
 	chmod 700 $zpath
 
 	mkdir $zpath/root
@@ -159,7 +170,7 @@ create_dataset() {
 	mkdir $zpath/cores
 	chmod 755 $zpath/cores
 
-	echo "==> The dataset is $BASE_DATASET/$IUUID"
+	echo "==> The dataset is $zname"
 	echo "==>"
 }
 
