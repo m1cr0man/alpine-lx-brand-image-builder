@@ -20,7 +20,7 @@ deploy:
   - export SMARTOS_BUILDER=10.0.0.100
   - ssh-keyscan $SMARTOS_BUILDER > ~/.ssh/known_hosts
   - rsync -vaH *.tar.gz create-lx-image root@$SMARTOS_BUILDER:./
-  - ssh root@$SMARTOS_BUILDER bash -c './create-lx-image -t *.tar.gz -k 4.4.0 -m 20181011T004530Z -i lx-alpine -d "Alpine Linux M1cr0man 3.9.0 64-bit lx-brand image." -u https://docs.joyent.com/images/container-native-linux; rm -f *.tar.gz'
+  - ssh root@$SMARTOS_BUILDER bash -c 'FILE=*.tar.gz ./create-lx-image -t $(pwd)/${FILE} -k 4.4.0 -m 20181011T004530Z -i lx-alpine -d "Alpine Linux M1cr0man 3.9.0 64-bit lx-brand image." -u https://docs.joyent.com/images/container-native-linux; rm -f *.tar.gz'
   - rsync -vaH root@$SMARTOS_BUILDER:*.zfs.gz .
   - rsync -vaH root@$SMARTOS_BUILDER:*.json .
   - ssh root@$SMARTOS_BUILDER bash -c 'rm -f *.zfs.gz *.json'
