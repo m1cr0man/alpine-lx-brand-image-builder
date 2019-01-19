@@ -19,7 +19,7 @@ before_deploy:
 deploy:
   - export SMARTOS_BUILDER=10.0.0.100
   - ssh-keyscan $SMARTOS_BUILDER > ~/.ssh/known_hosts
-  - rsync -vaH *.tar.gz create-lx-image create.sh root@$SMARTOS_BUILDER:./
+  - rsync -vaH *.tar.gz create-lx-image create-manifest create.sh root@$SMARTOS_BUILDER:./
   - ssh root@$SMARTOS_BUILDER ./create.sh
   - rsync --remove-source-files -vaH root@$SMARTOS_BUILDER:*{.zfs.gz,.json} .
 after_deploy:
