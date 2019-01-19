@@ -24,4 +24,4 @@ deploy:
   - rsync --remove-source-files -vaH root@$SMARTOS_BUILDER:*{.zfs.gz,.json} .
 after_deploy:
   - mc cp *.zfs.gz *.json m1s3/artifacts/zones/
-  - echo *.zfs.gz | mc pipe m1s3/artifacts/zones/alpine-latest.txt
+  - $(date +%Y%m%d) | mc pipe m1s3/artifacts/zones/alpine-latest.txt
